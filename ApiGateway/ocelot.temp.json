@@ -5,7 +5,7 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "${API_CONTACT_HOST}",
+                    "Host": "localhost",
                     "Port": "7117"
                 }
             ],
@@ -25,7 +25,7 @@
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "${API_CONTACT_HOST}",
+                    "Host": "localhost",
                     "Port": 7117
                 }
             ],
@@ -45,7 +45,7 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "${API_CONTACT_HOST}",
+                    "Host": "localhost",
                     "Port": 7117
                 }
             ],
