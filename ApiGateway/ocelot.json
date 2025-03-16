@@ -1,0 +1,72 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/contacts",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/contacts",
+            "UpstreamHttpMethod": [ "POST" ],
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "ClientWhitelist": [],
+                "Period": "1m",
+                "PeriodTimespan": 10,
+                "Limit": 5
+            }
+        },
+
+        {
+            "DownstreamPathTemplate": "/api/contacts",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/contacts",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "ClientWhitelist": [],
+                "Period": "1m",
+                "PeriodTimespan": 10,
+                "Limit": 5
+            }
+        },
+
+        {
+            "DownstreamPathTemplate": "/api/contacts",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/contacts",
+            "UpstreamHttpMethod": [ "DELETE" ],
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "ClientWhitelist": [],
+                "Period": "1m",
+                "PeriodTimespan": 10,
+                "Limit": 5
+            }
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "https://localhost:5000",
+        "RateLimitOptions": {
+            "DisableRateLimitHeaders": false,
+            "QuotaExceededMessage": "Taxa de requisições excedida. Tente novamente mais tarde.",
+            "HttpStatusCode": 429,
+            "ClientIdHeader": "client_123"
+        }
+    }
+}
