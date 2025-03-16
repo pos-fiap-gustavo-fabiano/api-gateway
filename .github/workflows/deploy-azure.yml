@@ -1,0 +1,40 @@
+name: Deploy .NET Application in Azure
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+
+env:
+  AZURE_WEBAPP_NAME: contact-api-gateway
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4.2.0
+        with:
+          dotnet-version: '8.0.x'
+          
+      - name: Restore
+        run: dotnet restore ./ContactGateway.sln
+        
+      - name: Build
+        run: dotnet build ./ContactGateway.sln --configuration Release --no-restore
+        
+      - name: Publish
+        run: dotnet publish ./ContactGateway.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+      #- name: Test
+      #  run: dotnet test ./ContactQueueService.sln --verbosity normal                    
+      - name: Deployment
+        uses: Azure/webapps-deploy@v3.0.0
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
