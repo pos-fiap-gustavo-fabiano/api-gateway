@@ -1,12 +1,52 @@
 {
     "Routes": [
         {
+            "DownstreamPathTemplate": "/api/contacts?code={code}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "fiap-contacts-get.azurewebsites.net",
+                    "Port": 443
+                }
+            ],
+            "UpstreamPathTemplate": "/api/contacts",
+            "UpstreamHttpMethod": [ "GET" ],
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "ClientWhitelist": [],
+                "Period": "1m",
+                "PeriodTimespan": 10,
+                "Limit": 10
+            }
+        },
+
+        {
+            "DownstreamPathTemplate": "/api/contacts/{id}?code={code}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "fiap-contacts-get.azurewebsites.net",
+                    "Port": 443
+                }
+            ],
+            "UpstreamPathTemplate": "/api/contacts/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "ClientWhitelist": [],
+                "Period": "1m",
+                "PeriodTimespan": 10,
+                "Limit": 10
+            }
+        },
+        
+        {
             "DownstreamPathTemplate": "/api/contacts",
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "${API_CONTACT_HOST}",
-                    "Port": "${PORT}"
+                    "Host": "localhost",
+                    "Port": "7117"
                 }
             ],
             "UpstreamPathTemplate": "/api/contacts",
@@ -19,17 +59,16 @@
                 "Limit": 5
             }
         },
-
         {
-            "DownstreamPathTemplate": "/api/contacts",
+            "DownstreamPathTemplate": "/api/contacts/{id}",
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "${API_CONTACT_HOST}",
-                    "Port": "${PORT}"
+                    "Host": "localhost",
+                    "Port": "7117"
                 }
             ],
-            "UpstreamPathTemplate": "/api/contacts",
+            "UpstreamPathTemplate": "/api/contacts/{id}",
             "UpstreamHttpMethod": [ "PUT" ],
             "RateLimitOptions": {
                 "EnableRateLimiting": true,
@@ -39,17 +78,16 @@
                 "Limit": 5
             }
         },
-
         {
-            "DownstreamPathTemplate": "/api/contacts",
+            "DownstreamPathTemplate": "/api/contacts/{id}",
             "DownstreamScheme": "https",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "${API_CONTACT_HOST}",
-                    "Port": "${PORT}"
+                    "Host": "localhost",
+                    "Port": "7117"
                 }
             ],
-            "UpstreamPathTemplate": "/api/contacts",
+            "UpstreamPathTemplate": "/api/contacts/{id}",
             "UpstreamHttpMethod": [ "DELETE" ],
             "RateLimitOptions": {
                 "EnableRateLimiting": true,

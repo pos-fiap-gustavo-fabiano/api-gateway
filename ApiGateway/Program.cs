@@ -1,8 +1,44 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
+ActivitySource ActivitySource = new ActivitySource("ContactQueueService.MessageBroker");
+var resourceBuilder = ResourceBuilder.CreateDefault()
+    .AddService(
+        serviceName: "api-gateway-contact",
+        serviceVersion: "1.0.0");
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource
+        .AddService(
+            serviceName: "api-gateway-contact",
+            serviceVersion: "1.0.0"))
+    .WithTracing(tracing => tracing
+        .AddSource("api-gateway-contact")
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddOtlpExporter(options =>
+        {
+            options.Endpoint = new Uri("http://134.122.121.176:4317");
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+        }));
 
+// Configure OpenTelemetry logging
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.SetResourceBuilder(resourceBuilder);
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+
+    logging.AddOtlpExporter(options =>
+    {
+        options.Endpoint = new Uri("http://134.122.121.176:4317");
+        options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+    });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

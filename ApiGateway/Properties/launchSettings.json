@@ -17,8 +17,8 @@
       "applicationUrl": "https://localhost:5054",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
-            "API_CONTACT_HOST": "contact-queue-efd8grg9c0g6fnhg.canadacentral-01.azurewebsites.net",
-            "PORT": "443"
+            "API_CONTACT_HOST": "localhost",
+            "PORT": "7117"
         }
     },
     "IIS Express": {
