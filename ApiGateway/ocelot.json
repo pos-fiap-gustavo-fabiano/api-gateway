@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/contacts?code={codeAll}",
+      "DownstreamPathTemplate": "/api/contacts?code=${codeAll}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -21,7 +21,7 @@
     },
 
     {
-      "DownstreamPathTemplate": "/api/contacts/{id}?code={codyById}",
+      "DownstreamPathTemplate": "/api/contacts/{id}?code=${codeById}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -42,11 +42,11 @@
 
     {
       "DownstreamPathTemplate": "/api/contacts",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "7117"
+          "Host": "${ApiContactsUrl}",
+          "Port": "${PORT}"
         }
       ],
       "UpstreamPathTemplate": "/api/contacts",
@@ -61,11 +61,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/contacts/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "7117"
+          "Host": "${ApiContactsUrl}",
+          "Port": "${PORT}"
         }
       ],
       "UpstreamPathTemplate": "/api/contacts/{id}",
@@ -80,11 +80,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/contacts/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "7117"
+          "Host": "${ApiContactsUrl}",
+          "Port": "${PORT}"
         }
       ],
       "UpstreamPathTemplate": "/api/contacts/{id}",
