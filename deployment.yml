@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contacts-gateway-deployment
+  labels:
+    app: contacts-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contacts-gateway
+  template:
+    metadata:
+      labels:
+        app: contacts-gateway
+    spec:
+      containers:
+        - name: contacts-gateway
+          image: gugol94/fiapcontacts-apigateway
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "110m"
+            limits:
+              memory: "256Mi"
+              cpu: "150m"
