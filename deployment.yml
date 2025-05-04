@@ -20,13 +20,13 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 80
-          env:
-            - name: ASPNETCORE_ENVIRONMENT
-              value: "Production"
+          envFrom:
+            - configMapRef:
+                name: contacts-gateway-config
           resources:
             requests:
               memory: "128Mi"
-              cpu: "110m"
+              cpu: "100m"
             limits:
               memory: "256Mi"
               cpu: "150m"

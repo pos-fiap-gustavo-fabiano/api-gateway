@@ -47,17 +47,27 @@ var configBuilder = new ConfigurationBuilder();
 configBuilder.AddEnvironmentVariables();
 var configuration = configBuilder.Build();
 
-// Obtenha o conteúdo do arquivo ocelot.json
+// Obtenha o conteï¿½do do arquivo ocelot.json
 string ocelotJson = File.ReadAllText("ocelot.json");
 
-// Substitua os placeholders pelas variáveis de ambiente
+// Substitua os placeholders pelas variï¿½veis de ambiente
 var apiHost = Environment.GetEnvironmentVariable("API_CONTACT_HOST") ?? "localhost";
 ocelotJson = ocelotJson.Replace("${API_CONTACT_HOST}", apiHost);
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "7117";
 ocelotJson = ocelotJson.Replace("${PORT}", port);
 
-// Salve o arquivo com as substituições
+var codeAll = Environment.GetEnvironmentVariable("codeAll");
+ocelotJson = ocelotJson.Replace("${codeAll}", codeAll);
+
+var codeById = Environment.GetEnvironmentVariable("codeById");
+ocelotJson = ocelotJson.Replace("${codeById}", codeById);
+
+
+var url = Environment.GetEnvironmentVariable("ApiContactsUrl");
+ocelotJson = ocelotJson.Replace("${ApiContactsUrl}", url);
+
+// Salve o arquivo com as substituiï¿½ï¿½es
 File.WriteAllText("ocelot.temp.json", ocelotJson);
 builder.Configuration.AddJsonFile("ocelot.temp.json", optional: false, reloadOnChange: true);
 
