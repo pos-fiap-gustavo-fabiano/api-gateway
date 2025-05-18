@@ -17,7 +17,7 @@
       "applicationUrl": "https://localhost:5054",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
-            "API_CONTACT_HOST": "localhost",
+            "ApiContactsUrl": "localhost",
             "PORT": "7117"
         }
     },

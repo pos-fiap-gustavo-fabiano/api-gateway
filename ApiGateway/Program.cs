@@ -22,7 +22,7 @@ builder.Services.AddOpenTelemetry()
         .AddHttpClientInstrumentation()
         .AddOtlpExporter(options =>
         {
-            options.Endpoint = new Uri("http://134.122.121.176:4317");
+            options.Endpoint = new Uri("http://161.35.12.86:4317");
             options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
         }));
 
@@ -35,7 +35,7 @@ builder.Logging.AddOpenTelemetry(logging =>
 
     logging.AddOtlpExporter(options =>
     {
-        options.Endpoint = new Uri("http://134.122.121.176:4317");
+        options.Endpoint = new Uri("http://161.35.12.86:4317");
         options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
     });
 });
