@@ -1,6 +1,6 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
@@ -16,29 +16,15 @@ builder.Services.AddOpenTelemetry()
         .AddService(
             serviceName: "api-gateway-contact",
             serviceVersion: "1.0.0"))
-    .WithTracing(tracing => tracing
-        .AddSource("api-gateway-contact")
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddOtlpExporter(options =>
-        {
-            options.Endpoint = new Uri("http://161.35.12.86:4317");
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-        }));
-
-// Configure OpenTelemetry logging
-builder.Logging.AddOpenTelemetry(logging =>
-{
-    logging.SetResourceBuilder(resourceBuilder);
-    logging.IncludeFormattedMessage = true;
-    logging.IncludeScopes = true;
-
-    logging.AddOtlpExporter(options =>
+    .WithMetrics(metrics =>
     {
-        options.Endpoint = new Uri("http://161.35.12.86:4317");
-        options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+        metrics
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddPrometheusExporter()
+            .AddAspNetCoreInstrumentation();
     });
-});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -82,6 +68,8 @@ app.UseSwaggerUI();
 
 
 app.UseAuthorization();
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 app.MapControllers();
 await app.UseOcelot();
