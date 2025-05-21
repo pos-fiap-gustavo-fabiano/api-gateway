@@ -31,6 +31,18 @@ data:
       - job_name: 'contacts-gateway'
         static_configs:
           - targets: ['contacts-gateway-service.default.svc.cluster.local:80']
+      - job_name: 'rabbitmq'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            regex: rabbitmq
+            action: keep
+          - source_labels: [__meta_kubernetes_pod_container_port_name]
+            regex: metrics
+            action: keep
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: instance
 
 ---
 # PersistentVolume for Prometheus
