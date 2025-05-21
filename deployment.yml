@@ -26,11 +26,15 @@ spec:
     metadata:
       labels:
         app: contacts-gateway
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: contacts-gateway
           image: gugol94/fiapcontacts-apigateway
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           envFrom:
@@ -39,7 +43,7 @@ spec:
           resources:
             requests:
               memory: "128Mi"
-              cpu: "100m"
+              cpu: "90m"
             limits:
               memory: "256Mi"
               cpu: "100m"

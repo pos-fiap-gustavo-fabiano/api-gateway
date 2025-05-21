@@ -1,6 +1,6 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
@@ -17,28 +17,41 @@ builder.Services.AddOpenTelemetry()
             serviceName: "api-gateway-contact",
             serviceVersion: "1.0.0"))
     .WithTracing(tracing => tracing
-        .AddSource("api-gateway-contact")
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddOtlpExporter(options =>
+        .AddAspNetCoreInstrumentation(options =>
         {
-            options.Endpoint = new Uri("http://161.35.12.86:4317");
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-        }));
+            options.EnrichWithHttpRequest = (activity, httpRequest) =>
+            {
+                if (httpRequest != null)
+                {
+                    activity?.SetTag("http.method", httpRequest.Method);
+                    activity?.SetTag("http.url", httpRequest.Path);
+                }
+            };
 
-// Configure OpenTelemetry logging
-builder.Logging.AddOpenTelemetry(logging =>
-{
-    logging.SetResourceBuilder(resourceBuilder);
-    logging.IncludeFormattedMessage = true;
-    logging.IncludeScopes = true;
-
-    logging.AddOtlpExporter(options =>
+            options.EnrichWithHttpResponse = (activity, httpResponse) =>
+            {
+                if (httpResponse != null)
+                {
+                    activity?.SetTag("http.status_code", httpResponse.StatusCode);
+                }
+            };
+        })
+        .AddHttpClientInstrumentation()
+        .AddConsoleExporter())
+    .WithMetrics(metrics =>
     {
-        options.Endpoint = new Uri("http://161.35.12.86:4317");
-        options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+        metrics
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddMeter("Microsoft.AspNetCore.Hosting")
+            .AddView("http.server.duration", new ExplicitBucketHistogramConfiguration
+            {
+                Boundaries = [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]
+            })
+            .AddPrometheusExporter();
     });
-});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -82,6 +95,8 @@ app.UseSwaggerUI();
 
 
 app.UseAuthorization();
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 app.MapControllers();
 await app.UseOcelot();
